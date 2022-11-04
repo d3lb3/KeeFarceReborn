@@ -6,7 +6,7 @@ Heavily inspired by the great [KeeFarce](https://github.com/denandz/KeeFarce), [
 
 ## Yet another KeePass extraction tool, why ?
 
-A few years ago, [@denandz](https://github.com/denandz) released [KeeFarce](https://github.com/denandz/KeeFarce), the first offensive tool designed to extract KeePass databases in cleartex. It works by injecting a DLL into the running process, then walks the heap using [ClrMD](https://github.com/microsoft/clrmd) to find necessary object and invoke KeePass's builtin extraction method using reflection. Its only downside at the time was that multiple files needed to be dropped on the target (the extraction DLL + ClrMD DLL + the injector + a bootstrap DLL).
+A few years ago, [@denandz](https://github.com/denandz) released [KeeFarce](https://github.com/denandz/KeeFarce), the first offensive tool designed to extract KeePass databases in cleartex. It works by injecting a DLL into the running process, then walks the heap using [ClrMD](https://github.com/microsoft/clrmd) to find the necessary objects and invoke KeePass's builtin export method using reflection. Its only downside at the time was that multiple files needed to be dropped on the target (the extraction DLL + ClrMD DLL + the injector + a bootstrap DLL).
 
 A year later, [@tifkin_](https://twitter.com/tifkin_) and [@harmj0y](https://twitter.com/harmj0y) released an in-depth review of offensive techniques targeting KeePass (while not available on harmj0y's blog anymore, the articles can be found on Wayback Machine: [part 1](https://web.archive.org/web/20220123003835/http://www.harmj0y.net/blog/redteaming/a-case-study-in-attacking-keepass/), [part 2](https://web.archive.org/web/20220122225230/http://www.harmj0y.net/blog/redteaming/keethief-a-case-study-in-attacking-keepass-part-2/)). It resulted in the release of [KeeThief](https://github.com/GhostPack/KeeThief), a tool able to decrypt KeePass' masterkey (including when alternative authentication method are used). It worked so well that KeePass developpers [added a parameter](https://sourceforge.net/p/keepass/discussion/329220/thread/62b0b650/) to mitigate this technique (it can be disabled by editing KeePass configuration file if the user have enough rights, which is pretty common).
 
@@ -24,7 +24,7 @@ As the code solely relies on .NET Framework with no external dependency, it shou
 
 ## Usage
 
-Once the *KeePassReborn.dll* is compiled, **you will need to inject it yourself** in the targeted KeePass process.
+Once the *KeePassReborn.dll* is compiled, **you will need to inject it by yourself** in the targeted KeePass process.
 
 As I personally find it easier to stealthily inject shellcode than DLL in a remote process, the first thing I typically start with is generating a position-independent shellcode from our DLL. It appears that [@odzhan](https://twitter.com/modexpblog?lang=fr) and [@TheWover](https://twitter.com/thewover)'s [donut](https://github.com/TheWover/donut) project perfectly suits our needs !
 
@@ -79,9 +79,9 @@ Write-Output $b64 | clip
 
 You now have a payload ready to be injected with your favourite technique. If you don't know what to do now, I suggest you check [ired.team Code & Process Injection page](https://www.ired.team/offensive-security/code-injection-process-injection) to get familiar with the concept, then have a look into [direct syscalls](https://jhalon.github.io/utilizing-syscalls-in-csharp-2/) and [D/Invoke](https://thewover.github.io/Dynamic-Invoke/) which will probably do the job in most cases. [@SEKTOR7](https://institute.sektor7.net/)'s malware development courses are full of great learnings if you can afford them. 
 
-As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCrypt code (itself inspired by  SEKTOR7 courses) that makes use of D/Invoke. To demonstrate, I copied the project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
+As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCrypt code (itself inspired by  SEKTOR7 courses) that makes use of D/Invoke. To demonstrate, I copied his project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
 
-> This would of course need to be edited in order to bypass modern EDRs, but would allow you to test that everything behaves as expected
+> While it still bypasses Defender at the moment (november 2022), tinkering your own injector will of course be needed in order to bypass modern EDRs. This code is just here to demonstrate that everything behaves as expected.
 
 By running *.\SampleInjector.exe* alongside an open KeePass database, you will see debug messages being printed in MessageBox (which should obviously be removed when used in a real penetration testing scenario) then find the exported database in the current user's *%APPDATA%* (choosed by default, as KeePass will be sure to have write access). The exported XML file can later be imported in any KeePass database without asking for a password.
 
