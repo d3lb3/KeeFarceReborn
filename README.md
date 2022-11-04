@@ -85,7 +85,7 @@ As an example, let's inject our payload using [snovvcrash](https://twitter.com/s
 
 By running *.\SampleInjector.exe* alongside an open KeePass database, you will see debug messages being printed in MessageBox (which should obviously be removed when used in a real penetration testing scenario) then find the exported database in the current user's *%APPDATA%* (choosed by default, as KeePass will be sure to have write access). The exported XML file can later be imported in any KeePass database without asking for a password.
 
->  Note : if the export functionnality is disabled by policy, it can still be enabled by editing the KeePass.config.xml :
+>  If the export functionnality is disabled by policy, it can still be enabled by editing the KeePass.config.xml :
 >
 > ```xml
 > <Policy>
