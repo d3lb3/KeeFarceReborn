@@ -79,7 +79,7 @@ Write-Output $b64 | clip
 
 You now have a payload ready to be injected with your favourite technique. If you don't know what to do now, I suggest you check [ired.team Code & Process Injection page](https://www.ired.team/offensive-security/code-injection-process-injection) to get familiar with the concept, then have a look into [direct syscalls](https://jhalon.github.io/utilizing-syscalls-in-csharp-2/) and [D/Invoke](https://thewover.github.io/Dynamic-Invoke/) which will probably do the job in most cases. [@SEKTOR7](https://institute.sektor7.net/)'s malware development courses are full of great learnings if you can afford them. 
 
-As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCrypt code (itself inspired by  SEKTOR7 courses) that makes use of D/Invoke. To demonstrate, I copied his project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
+As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCryptThief code (itself inspired by  SEKTOR7 courses) that makes use of D/Invoke. To demonstrate, I copied his project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
 
 > While it still bypasses Defender at the moment (november 2022), tinkering your own injector will of course be needed in order to bypass modern EDRs. This code is just here to demonstrate that everything behaves as expected.
 
