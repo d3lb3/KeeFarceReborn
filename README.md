@@ -22,13 +22,13 @@ These tools quickly became my go-to during penetration testing, but they soon be
 
 As the code solely relies on .NET Framework with no external dependency, it should compile easily on Visual Studio 2015 and higher.
 
-## Usage
+## Usage Example
 
 Once the *KeePassReborn.dll* is compiled, **you will need to inject it by yourself** in the targeted KeePass process.
 
 As I personally find it easier to stealthily inject shellcode than DLL in a remote process, the first thing I typically start with is generating a position-independent shellcode from our DLL. It appears that [@odzhan](https://twitter.com/modexpblog?lang=fr) and [@TheWover](https://twitter.com/thewover)'s [donut](https://github.com/TheWover/donut) project perfectly suits our needs !
 
-We compile donut from a commit in the dev branch, as it fixes an [issue in application domain management](https://github.com/TheWover/donut/issues/44) that would prevent us from running in the default domain.
+We compile donut from a commit in the dev branch, as it fixes an [issue in application domain management](https://github.com/TheWover/donut/issues/44) that would prevent us from performing reflection in the default domain.
 
 ```
 git clone https://github.com/TheWover/donut/
@@ -36,7 +36,7 @@ cd donut
 git checkout 9d781d8da571eb1499122fc0e2d6e89e5a43603c
 ```
 
-We can easily build from Visual Studio's *x64 Native Tools Command Prompt VS* with *nmake* utility:
+We can easily build from Visual Studio's *x64 Native Tools Command Prompt* with *nmake* utility:
 
 ```
 nmake -f Makefile.msvc
@@ -61,9 +61,9 @@ Generating the shellcode is as simple as:
   [ Shellcode     : "loader.bin"
 ```
 
-> Note that `-e` is necessary to disable entropy, otherwise the injected process won't be in the default application domain.
+> Note that `-e 1` is necessary to disable entropy, otherwise the injected process won't be in the default application domain.
 
-Let's compress it in PowerShell for easier integration in the injector's code:
+Let's compress it using PowerShell for easier integration in the injector's code:
 
 ```powershell
 $bytes = [System.IO.File]::ReadAllBytes("C:\donut\loader.bin")
@@ -79,9 +79,9 @@ Write-Output $b64 | clip
 
 You now have a payload ready to be injected with your favourite technique. If you don't know what to do now, I suggest you check [ired.team Code & Process Injection page](https://www.ired.team/offensive-security/code-injection-process-injection) to get familiar with the concept, then have a look into [direct syscalls](https://jhalon.github.io/utilizing-syscalls-in-csharp-2/) and [D/Invoke](https://thewover.github.io/Dynamic-Invoke/) which will probably do the job in most cases. [@SEKTOR7](https://institute.sektor7.net/)'s malware development courses are full of great learnings if you can afford them. 
 
-As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCryptThief code (itself inspired by  SEKTOR7 courses) that makes use of D/Invoke. To demonstrate, I copied his project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
+As an example, let's inject our payload using [snovvcrash](https://twitter.com/snovvcrash)'s VeraCryptThief code (itself inspired by  SEKTOR7 courses) that make use of D/Invoke. To demonstrate, I copied his project in the [SampleInjector](https://github.com/d3lb3/KeeFarceReborn/tree/main/SampleInjector) folder, we only need to paste our compressed shellcode then compile in x64.
 
-> While it still bypasses Defender at the moment (november 2022), tinkering your own injector will of course be needed in order to bypass modern EDRs. This code is just here to demonstrate that everything behaves as expected.
+> While it still bypasses Defender at the moment (november 2022), tinkering your own injector will of course be needed in order to bypass modern EDRs. This sample injector is just here to demonstrate that everything behaves as expected.
 
 By running *.\SampleInjector.exe* alongside an open KeePass database, you will see debug messages being printed in MessageBox (which should obviously be removed when used in a real penetration testing scenario) then find the exported database in the current user's *%APPDATA%* (choosed by default, as KeePass will be sure to have write access). The exported XML file can later be imported in any KeePass database without asking for a password.
 
@@ -89,7 +89,7 @@ By running *.\SampleInjector.exe* alongside an open KeePass database, you will s
 >
 > ```xml
 > <Policy>
->     <Export>false</Export>
+>     <Export>true</Export>
 > </Policy>
 > ```
 
@@ -97,16 +97,16 @@ By running *.\SampleInjector.exe* alongside an open KeePass database, you will s
 
 ### Detection
 
-While the main issue concerning KeePass extraction tools detection is injectors, in-memory scan may also trigger alerts when analyzing the shellcode. You may want to obfuscate the shellcode and/or encrypt it when using with your injector.
+While the main issue concerning KeePass extraction tools detection is injectors, in-memory scan may also trigger alerts when analyzing the shellcode. You will probably have to obfuscate and/or encrypt the shellcode to use with your injector.
 
-Also, the code uses `Assembly.Load` to perform reflection once injected, and this behavior may be considered as malicious. I noticed that KeePass itself was sometimes using this method so I guess most protection won't be alerted. If you have insights on this, feel free to let me know.
+Also, the `Assembly.Load` method used to perform reflection may be considered as a malicious behavior. I noticed that KeePass itself was sometimes using it for legitimate purposes so I guess most antiviral solutions won't flag it. If you have insights on this, feel free to let me know.
 
 ### Compatibility
 
-- The code only relies on .NET Framework with no external dependency, so should be fairly compatible with most targets.
-- By default, KeeFarce Reborn Visual Studio solution targets .NET 4.6, which is installed by default on Windows 10 but can easily be changed.
-- If .NET Framework is not installed on the target system, you can still install it manually from command line using `DISM.exe`.
-- I only tested x64 payloads, but this should work as well for 32 bits architectures.
+- KeeFarce Reborn only relies on .NET Framework with no external dependency, so it should be fairly compatible with most targets.
+- By default, KeeFarce Reborn's Visual Studio solution targets .NET 4.6 (installed by default on Windows 10) but can be retargeted edited.
+- If .NET Framework is not installed on the target system, you can still set it up manually from command line using `DISM.exe`.
+- I only tested x64 payloads injection, but this should work as well with 32 bits architectures.
 
 ## Roadmap
 
