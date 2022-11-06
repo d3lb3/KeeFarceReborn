@@ -15,8 +15,8 @@ These tools quickly became my go-to during penetration testing, but they soon be
 [@holly-cracker](https://github.com/holly-hacker) also released [KeePassHax](https://github.com/HoLLy-HaCKeR/KeePassHax), which comes as a single DLL and only uses reflection to decrypt KeePass' masterkey. Inspired by this work, I decided to do the same with KeeFarce and write my own KeePass extraction tool with the following features:
 
 - Self-sufficient ⇒ no interaction needed with the injector's code to work.
-- Only uses builtin .NET libraries (in particular, no ClrMD) ⇒ better compatibility + single-file to make the injection easier.
-- Exports the database ⇒ same as KeeFarce, no need to retrieve the .kdbx nor using a custom KeePass built to input the recovered masterkey.
+- Only uses builtin .NET libraries (no ClrMD) ⇒ better compatibility + single-file DLL make the injection process easier.
+- Exports the database (like KeeFarce) ⇒ no need to retrieve the .kdbx nor using a custom KeePass build to input the recovered masterkey.
 
 ## Building
 
