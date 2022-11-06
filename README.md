@@ -15,7 +15,7 @@ These tools quickly became my go-to during penetration testing, but they soon be
 [@holly-cracker](https://github.com/holly-hacker) also released [KeePassHax](https://github.com/HoLLy-HaCKeR/KeePassHax), which comes as a single DLL and only uses reflection to decrypt KeePass' masterkey. Inspired by this work, I decided to do the same with KeeFarce and write my own KeePass extraction tool with the following features:
 
 - Self-sufficient ⇒ no interaction needed with the injector's code to work.
-- Only uses builtin .NET libraries (no ClrMD) ⇒ better compatibility + single-file DLL make the injection process easier.
+- Only uses builtin .NET libraries (no ClrMD) ⇒ better compatibility + single-file DLL makes the injection process easier.
 - Exports the database (like KeeFarce) ⇒ no need to retrieve the .kdbx nor using a custom KeePass build to input the recovered masterkey.
 
 ## Building
@@ -24,9 +24,9 @@ As the code solely relies on .NET Framework with no external dependency, it shou
 
 ## Usage Example
 
-Once the *KeePassReborn.dll* is compiled, **you will need to inject it by yourself** in the targeted KeePass process. This is on purpose, because injectors become obsolete every few months.
+Once *KeePassReborn.dll* is compiled, **you must use your own injector** to target the running KeePass process. This is deliberate, as injectors become obsolete every few months.
 
-As I personally find it easier to stealthily inject shellcode than DLL in a remote process, the first thing I typically start with is generating a position-independent shellcode from our DLL. It appears that [@odzhan](https://twitter.com/modexpblog?lang=fr) and [@TheWover](https://twitter.com/thewover)'s [donut](https://github.com/TheWover/donut) project perfectly suits our needs !
+Because I personally find it easier to stealthily inject shellcode than DLL in a remote process, the first thing I typically start with is generating a position-independent shellcode from our DLL. It appears that [@odzhan](https://twitter.com/modexpblog?lang=fr) and [@TheWover](https://twitter.com/thewover)'s [donut](https://github.com/TheWover/donut) project perfectly suits our needs !
 
 We compile donut from a commit in the dev branch, as it fixes an [issue in application domain management](https://github.com/TheWover/donut/issues/44) that would prevent us from performing reflection in the default domain.
 
