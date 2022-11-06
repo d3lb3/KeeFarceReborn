@@ -24,7 +24,7 @@ As the code solely relies on .NET Framework with no external dependency, it shou
 
 ## Usage Example
 
-Once the *KeePassReborn.dll* is compiled, **you will need to inject it by yourself** in the targeted KeePass process.
+Once the *KeePassReborn.dll* is compiled, **you will need to inject it by yourself** in the targeted KeePass process. This is on purpose, as injectors become obsolete every few months.
 
 As I personally find it easier to stealthily inject shellcode than DLL in a remote process, the first thing I typically start with is generating a position-independent shellcode from our DLL. It appears that [@odzhan](https://twitter.com/modexpblog?lang=fr) and [@TheWover](https://twitter.com/thewover)'s [donut](https://github.com/TheWover/donut) project perfectly suits our needs !
 
