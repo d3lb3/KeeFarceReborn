@@ -42,7 +42,7 @@ Next time KeePass is started and a database unlocked, the DLL will be loaded and
 
 >  If you don't have write access to KeePass plugin directory, you can have a look at [Quarkslab's article](https://blog.quarkslab.com/post-exploitation-abusing-the-keepass-plugin-cache.html) which demonstrates how to load plugins with less privileges through the plugin cache.
 
-### Use your Perform Shellcode injection
+### Perform shellcode injection
 
 *<u>Pre-requisite: KeePass is running + a database in unlocked by the user + you have enough rights to inject in the KeePass process.</u>*
 
