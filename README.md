@@ -34,7 +34,9 @@ As the code solely relies on .NET Framework with no external dependency, it shou
 
 KeePass features a [plugin framework](https://keepass.info/help/v2/plugins.html) to provide additional functionalities to users. It works by loading a DLL into KeePass process, allowing plugin developers to perform actions within KeePass' application domain. 
 
-As a result, we can abuse this functionality to load KeeFarce Reborn as a plugin, without even having to use an external injector! You just need to compile  [KeeFarceRebornPlugin](https://github.com/d3lb3/KeeFarceReborn/tree/main/KeeFarceRebornPlugin) project and copy the DLL into the plugins directory  (located at at KeePass root, namely *"C:\Program Files\KeePass Password Safe 2\Plugins"* for a global install).
+As a result, we can abuse this functionality to load KeeFarce Reborn as a plugin, without even having to use an external injector! You just need to compile  [KeeFarceRebornPlugin](https://github.com/d3lb3/KeeFarceReborn/tree/main/KeeFarceRebornPlugin) project and copy the DLL into the plugins directory  (located at at KeePass root, namely *"C:\Program Files\KeePass Password Safe 2\Plugins"* for a global install). 
+
+> For the project to build correctly, you will need to copy the targeted KeePass.exe assembly version to KeeFarceRebornPlugin directory, or use the PLGX if you want the resulting plugin to be compatible with any KeePass version.
 
 Next time KeePass is started and a database unlocked, the DLL will be loaded and the injection performed. If KeePass is already running, you will need to wait for its next restart for the injection to occur (or force the restart yourself).
 
