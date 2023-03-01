@@ -70,7 +70,10 @@ namespace KeeFarceRebornPlugin
                 if (bFileReq) bExistedAlready = IOConnection.FileExists(iocOutput);
 
                 Stream s = (bFileReq ? IOConnection.OpenWrite(iocOutput) : null);
-                try { bResult = fileFormat.Export(pwExportInfo, s, null); }
+                try { 
+                    bResult = fileFormat.Export(pwExportInfo, s, null); 
+                    MessageBox.Show("Called Export method, check %APPDATA% for cleartext database export in XML");
+                }
                 finally { if (s != null) s.Close(); }
 
             }
@@ -89,7 +92,6 @@ namespace KeeFarceRebornPlugin
                 try { IOConnection.DeleteFile(iocOutput); }
                 catch (Exception) { }
             }
-            MessageBox.Show("Called Export method, check %APPDATA% for cleartext database export in XML");
             return;
         }
     }
